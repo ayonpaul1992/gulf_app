@@ -5,22 +5,24 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:gulf_app/components/userentry_app_bar.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'signup.dart';
-import 'forgot_password.dart';
+import 'login.dart';
+import 'signup_confirm.dart';
 
-class loginPage extends StatefulWidget {
-  const loginPage({super.key});
+class signupPage extends StatefulWidget {
+  const signupPage({super.key});
 
   @override
-  State<StatefulWidget> createState() => loginPageState();
+  State<StatefulWidget> createState() => signupPageState();
 }
 
-class loginPageState extends State<loginPage> {
+class signupPageState extends State<signupPage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   // Create a storage instance
   final FlutterSecureStorage secureStorage = FlutterSecureStorage();
+  final fullNameText = TextEditingController();
   final phoneText = TextEditingController();
   final passText = TextEditingController();
+  final repassText = TextEditingController();
   bool isLoading = false; // For showing a loading spinner
   bool _isHoveredForgotPassword = false;
   String selectedCountryCode = '+91';
@@ -82,7 +84,7 @@ class loginPageState extends State<loginPage> {
                           width: 10,
                         ),
                         Text(
-                          "Login with phone no",
+                          "Register to get started",
                           style: GoogleFonts.poppins(
                               color: Color(0xFF244065),
                               fontSize: 22,
@@ -103,7 +105,7 @@ class loginPageState extends State<loginPage> {
                 padding:
                     EdgeInsets.only(top: 15, left: 20, right: 20, bottom: 30),
                 child: Text(
-                  "Enter your mobile number to receive a one-time passcode and access your account instantly.",
+                  "Enter your details below and start your journey with driver.io.",
                   textAlign: TextAlign.center,
                   style: GoogleFonts.poppins(
                     color: Color(0xFF6E7373),
@@ -116,6 +118,49 @@ class loginPageState extends State<loginPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
+                    Column(
+                      children: [
+                        Text(
+                          'Full Name',
+                          style: GoogleFonts.poppins(
+                            color: const Color(0xFF6E7373),
+                            fontSize: 14,
+                            fontWeight: FontWeight.w400,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(height: 20),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: Colors
+                                  .white, // Set background color if needed
+                              borderRadius: BorderRadius.circular(50),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black
+                                      .withOpacity(0.1), // Shadow color
+                                  blurRadius: 6,
+                                  offset: Offset(0, 3), // Shadow position
+                                ),
+                              ],
+                            ),
+                            child: TextField(
+                              controller: fullNameText,
+                              decoration: _inputDecoration(''),
+                              style: const TextStyle(
+                                color: Color(0xFF648683),
+                                fontSize: 14,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
                     Column(
                       children: [
                         Text(
@@ -220,7 +265,7 @@ class loginPageState extends State<loginPage> {
                     Column(
                       children: [
                         Text(
-                          'Enter Password',
+                          'Password',
                           style: GoogleFonts.poppins(
                             color: const Color(0xFF6E7373),
                             fontSize: 14,
@@ -252,7 +297,49 @@ class loginPageState extends State<loginPage> {
                                 color: Color(0xFF648683),
                                 fontSize: 14,
                               ),
-
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 25,
+                    ),
+                    Column(
+                      children: [
+                        Text(
+                          'Confirm Password',
+                          style: GoogleFonts.poppins(
+                            color: const Color(0xFF6E7373),
+                            fontSize: 14,
+                            fontWeight: FontWeight.w400,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(height: 20),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: Colors
+                                  .white, // Set background color if needed
+                              borderRadius: BorderRadius.circular(50),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black
+                                      .withOpacity(0.1), // Shadow color
+                                  blurRadius: 6,
+                                  offset: Offset(0, 3), // Shadow position
+                                ),
+                              ],
+                            ),
+                            child: TextField(
+                              controller: repassText,
+                              decoration: _inputDecoration(''),
+                              style: const TextStyle(
+                                color: Color(0xFF648683),
+                                fontSize: 14,
+                              ),
                             ),
                           ),
                         ),
@@ -269,11 +356,11 @@ class loginPageState extends State<loginPage> {
                             width: double.infinity,
                             child: ElevatedButton(
                               onPressed: () {
-                                // Navigator.push(
-                                //   context,
-                                //   MaterialPageRoute(
-                                //       builder: (context) => loginPage()),
-                                // );
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => signupConfirmPage()),
+                                );
                               },
                               style: ElevatedButton.styleFrom(
                                   backgroundColor: Color(0xFF9ECF9A)),
@@ -282,7 +369,7 @@ class loginPageState extends State<loginPage> {
                                     horizontal: 15.0, vertical: 10.0),
                                 child: Center(
                                   child: Text(
-                                    "Login",
+                                    "Create an account",
                                     style: GoogleFonts.poppins(
                                       color: Color(0xFFFFFFFF),
                                       fontSize: 16,
@@ -309,70 +396,38 @@ class loginPageState extends State<loginPage> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        MouseRegion(
-                          onEnter: (_) =>
-                              setState(() => _isHoveredForgotPassword = true),
-                          onExit: (_) =>
-                              setState(() => _isHoveredForgotPassword = false),
-                          child: TextButton(
-                            onPressed: () {
-                              Navigator.push(context,
-                                  MaterialPageRoute(builder: (context)=> forgotPasswordPage()
-                              ));
-                            },
-                            style: ButtonStyle(
-                              padding:
-                                  MaterialStateProperty.all(EdgeInsets.zero),
-                              minimumSize: MaterialStateProperty.all(Size.zero),
-                              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                              overlayColor:
-                                  MaterialStateProperty.all(Colors.transparent),
-                            ),
-                            child: Text(
-                              "Forgot your password?",
+                        Wrap(
+                          alignment: WrapAlignment.center,
+                          direction: Axis.horizontal,
+                          children: [
+                            Text(
+                              "Already have an account?",
                               style: GoogleFonts.poppins(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w400,
-                                decoration: TextDecoration.underline,
-                                height: 1.0,
-                                color: _isHoveredForgotPassword
-                                    ? Color(0xFF669933)
-                                    : const Color(0xFF6E7373), // 🔴 hover = red
-                                decorationColor: _isHoveredForgotPassword
-                                    ? Color(0xFF669933)
-                                    : const Color(0xFF6E7373),
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w400,
+                                  color: Color(0xFF6E7373)),
+                            ),
+                            SizedBox(width: 4,),
+                            InkWell(
+                              onTap: (){
+                                Navigator.push(context,
+                                    MaterialPageRoute(builder: (context)=> loginPage()
+                                    ));
+                              },
+                              child: Text(
+                                "LOGIN",
+                                style: GoogleFonts.poppins(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600,
+                                  color: const Color(0xFF669933),
+                                ),
                               ),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        TextButton(
-                          onPressed: () {
-                            Navigator.push(context,
-                                MaterialPageRoute(builder: (context)=> signupPage()
-                                ));
-                          },
-                          style: ButtonStyle(
-                            padding: MaterialStateProperty.all(EdgeInsets.zero),
-                            minimumSize: MaterialStateProperty.all(Size.zero),
-                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                            overlayColor:
-                                MaterialStateProperty.all(Colors.transparent),
-                          ),
-                          child: Text(
-                            "CREATE AN ACCOUNT",
-                            style: GoogleFonts.poppins(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w600,
-                              color: const Color(0xFF669933),
-                              height: 1.0, // match previous height
-                            ),
-                          ),
-                        ),
+                            )
+                          ],
+                        )
                       ],
                     ),
+                    SizedBox(height: 20,),
                   ],
                 ),
               ),
