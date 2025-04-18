@@ -21,11 +21,12 @@ class splashScreenState extends State<splashScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Wrap(
-                alignment: WrapAlignment.center,
+              Stack(
+                alignment: Alignment.center,
                   children: [
                 Container(child: Image.asset('assets/images/spls_bnnr.jpg')),
                 Positioned(
+                  bottom: 0,
                   child: Image.asset('assets/images/drvrio.png'),
                 )
               ]),
